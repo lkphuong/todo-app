@@ -13,11 +13,12 @@ import { ValidationUsernamePipe } from '../../common/pipes/validateUsername.pip'
 import { Roles } from 'src/common/decorator/role.decorator';
 import { RolesGuard } from 'src/common/guards/roles.guard';
 import { ROLE } from 'src/common/enum/role.enum';
+import { JwtAuthGuard } from 'src/common/auth/jwt-auth.guard';
 @Controller('user')
 export class UserController {
   constructor(private userService: UserService) {}
 
-  @UseGuards(RolesGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(ROLE.Admin)
   @Get()
   async getAll() {

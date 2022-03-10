@@ -12,8 +12,6 @@ export class UserService {
   constructor(
     @InjectRepository(UserEntity)
     private usersRepository: Repository<UserEntity>,
-    @Inject(REQUEST)
-    private request: any,
   ) {}
 
   async findAll(): Promise<UserEntity[]> {
