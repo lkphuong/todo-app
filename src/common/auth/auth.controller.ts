@@ -7,24 +7,6 @@ import { LocalAuthGuard } from './local-auth.guard';
 export class AuthController {
   constructor(private authService: AuthService) {}
 
-  // @Post('auth/login')
-  // async login(@Body() userEntity: any) {
-  //   const user = await this.authService.validateUser(
-  //     userEntity.username,
-  //     userEntity.password,
-  //   );
-  //   if (user) {
-  //     const access_token = await this.authService.login(user);
-  //     return {
-  //       errorCode: 0,
-  //       access_token,
-  //       message: '',
-  //       errors: [],
-  //     };
-  //   }
-  //   throw new BadRequestException();
-  // }
-
   @UseGuards(LocalAuthGuard)
   @Post('auth/login')
   async login(@Request() req) {

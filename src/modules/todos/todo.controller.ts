@@ -6,6 +6,7 @@ import {
   ParseIntPipe,
   Post,
   Delete,
+  Put,
 } from '@nestjs/common';
 import { ToDoDto } from './dto/todo.dto';
 import { ToDoService } from './todo.service';
@@ -34,6 +35,18 @@ export class ToDoController {
       errors: [],
     };
   }
+
+  @Put(':id')
+  async update(@Param('id', ParseIntPipe) id: number, @Body() todo: ToDoDto) {
+    const newTodo = await this.todoService.update(id, todo);
+    return {
+      errorCode: 0,
+      data: newTodo,
+      message: '',
+      errors: [],
+    };
+  }
+
   @Delete(':id')
   async delete(@Param('id', ParseIntPipe) id: number) {
     await this.todoService.remove(id);
