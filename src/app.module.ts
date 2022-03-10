@@ -7,7 +7,7 @@ import { IndexModule } from './modules/index.module';
 import { AuthModule } from './common/auth/auth.module';
 
 @Module({
-  imports: [TypeOrmModule.forRoot(config), IndexModule, AuthModule],
+  imports: [TypeOrmModule.forRoot(config), AuthModule, IndexModule],
   controllers: [AppController],
   providers: [AppService],
 })

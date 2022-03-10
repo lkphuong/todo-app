@@ -10,16 +10,14 @@ import {
 import { UserDto } from './dto/user.dto';
 import { UserService } from './user.service';
 import { ValidationUsernamePipe } from '../../common/pipes/validateUsername.pip';
-import { AuthGuard } from '../../common/guards/auth.guards';
 import { Roles } from 'src/common/decorator/role.decorator';
-import { JwtAuthGuard } from 'src/common/auth/jwt-auth.guard';
 import { RolesGuard } from 'src/common/guards/roles.guard';
 import { ROLE } from 'src/common/enum/role.enum';
 @Controller('user')
 export class UserController {
   constructor(private userService: UserService) {}
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  @UseGuards(RolesGuard)
   @Roles(ROLE.Admin)
   @Get()
   async getAll() {
@@ -34,7 +32,6 @@ export class UserController {
   // }
 
   @Post()
-  @UseGuards(AuthGuard)
   async create(@Body(new ValidationUsernamePipe()) user: UserDto) {
     const newUser = await this.userService.create(user);
     delete newUser.password;
