@@ -23,7 +23,6 @@ export class UserController {
   @Get()
   async getAll() {
     const user = await this.userService.findAll();
-
     return user;
   }
 
