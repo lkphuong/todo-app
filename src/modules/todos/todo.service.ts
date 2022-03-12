@@ -1,4 +1,4 @@
-import { Injectable, Inject } from '@nestjs/common';
+import { Injectable, Inject, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ToDoEntity } from './entity/todo.entity';
@@ -20,8 +20,12 @@ export class ToDoService {
     return this.todoRepository.find({ relations: ['user'] });
   }
 
-  findOne(id: number): Promise<ToDoEntity> {
-    return this.todoRepository.findOne(id, { relations: ['user'] });
+  async findOne(id: number): Promise<ToDoEntity> {
+    const todo = await this.todoRepository.findOne(id, { relations: ['user'] });
+    if (todo) {
+      return todo;
+    }
+    throw new NotFoundException();
   }
 
   async create(todo: ToDoDto) {
@@ -30,8 +34,20 @@ export class ToDoService {
     return await this.todoRepository.save(todo);
   }
 
+  async update(id: number, todoDto: Partial<ToDoDto>) {
+    const todo = await this.todoRepository.findOne(id);
+    if (todo) {
+      return await this.todoRepository.update(id, todoDto);
+    }
+    throw new NotFoundException();
+  }
+
   async remove(id: number): Promise<void> {
-    await this.todoRepository.delete(id);
+    const todo = await this.todoRepository.findOne(id);
+    if (todo) {
+      await this.todoRepository.delete(id);
+    }
+    throw new NotFoundException();
   }
 
   async exportExcel() {

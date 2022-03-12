@@ -2,9 +2,13 @@ import {
   Body,
   Controller,
   Delete,
+  ForbiddenException,
   Get,
+  Inject,
   Param,
+  ParseIntPipe,
   Post,
+  Put,
   UseGuards,
 } from '@nestjs/common';
 import { UserDto } from './dto/user.dto';
@@ -14,14 +18,20 @@ import { Roles } from 'src/common/decorator/role.decorator';
 import { RolesGuard } from 'src/common/guards/roles.guard';
 import { ROLE } from 'src/common/enum/role.enum';
 import { JwtAuthGuard } from 'src/common/auth/jwt-auth.guard';
+import { REQUEST } from '@nestjs/core';
 @Controller('user')
 export class UserController {
-  constructor(private userService: UserService) {}
+  constructor(
+    private userService: UserService,
+    @Inject(REQUEST)
+    private request: any,
+  ) {}
 
   // @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(ROLE.Admin)
   @Get()
   async getAll() {
+    //console.log(await this.request.user);
     const user = await this.userService.findAll();
     return user;
   }
@@ -43,14 +53,29 @@ export class UserController {
     };
   }
 
+  @Put(':id')
+  async update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() userDto: UserDto,
+  ) {
+    const user = await this.request.user;
+    if (id === user.id) {
+      return await this.userService.update(id, userDto);
+    } else throw new ForbiddenException();
+  }
+
   @Delete(':id')
   async remove(@Param('id') id: number) {
-    await this.userService.remove(id);
-    return {
-      errorCode: 0,
-      data: [],
-      message: 'delete success',
-      erros: [],
-    };
+    const user = await this.request.user;
+    if (id === user.id) {
+      await this.userService.remove(id);
+      return {
+        errorCode: 0,
+        data: [],
+        message: 'delete success',
+        erros: [],
+      };
+    }
+    throw new ForbiddenException();
   }
 }

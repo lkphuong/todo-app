@@ -10,6 +10,9 @@ import {
   UploadedFile,
   Response,
   StreamableFile,
+  Inject,
+  ForbiddenException,
+  NotFoundException,
 } from '@nestjs/common';
 import { createReadStream } from 'fs';
 import { join } from 'path';
@@ -17,19 +20,37 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { storage } from 'src/common/utils/storage';
 import { ToDoDto } from './dto/todo.dto';
 import { ToDoService } from './todo.service';
+import { REQUEST } from '@nestjs/core';
 
 @Controller('todo')
 export class ToDoController {
-  constructor(private todoService: ToDoService) {}
+  constructor(
+    private todoService: ToDoService,
+    @Inject(REQUEST)
+    private request: any,
+  ) {}
 
   @Get()
   async getAll() {
-    return await this.todoService.findAll();
+    const user = await this.request.user;
+    if (user.role == 1) {
+      return await this.todoService.findAll();
+    }
+    throw new ForbiddenException();
   }
 
   @Get('getById/:id')
   async getById(@Param('id', ParseIntPipe) id: number) {
-    return await this.todoService.findOne(id);
+    const todo = await this.todoService.findOne(id);
+    const user = await this.request.user;
+
+    if (todo) {
+      if (todo.user.id == user.id) {
+        return await this.todoService.findOne(id);
+      }
+      throw new ForbiddenException();
+    }
+    throw new NotFoundException();
   }
 
   @Get('/export')
@@ -66,7 +87,11 @@ export class ToDoController {
     //return await this.todoService.importExcel();
     // console.log(file);
     // console.log(file.path);
-    return await this.todoService.importExcel(file.path);
+    const user = await this.request.user;
+    if (user.role === 1) {
+      return await this.todoService.importExcel(file.path);
+    }
+    throw new ForbiddenException();
   }
 
   @Delete(':id')

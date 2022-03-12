@@ -1,4 +1,9 @@
-import { Injectable, Inject, UnauthorizedException } from '@nestjs/common';
+import {
+  Injectable,
+  Inject,
+  UnauthorizedException,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UserEntity } from './entity/user.entity';
@@ -7,6 +12,7 @@ import { TokenDto } from './dto/token.dto';
 import * as bcrypt from 'bcrypt';
 import { bcryptSalt } from '../../config/bcrypt';
 import { REQUEST } from '@nestjs/core';
+import { NOTFOUND } from 'dns';
 
 @Injectable()
 export class UserService {
@@ -16,7 +22,6 @@ export class UserService {
   ) {}
 
   async findAll(): Promise<UserEntity[]> {
-    // console.log(await this.request.user);
     return await this.usersRepository.find({ relations: ['todos'] });
   }
 
@@ -32,6 +37,14 @@ export class UserService {
     user.password = await bcrypt.hash(user.password, bcryptSalt.salt);
     // const newUser = this.usersRepository.create(user);
     return await this.usersRepository.save(user);
+  }
+
+  async update(id: number, userDto: Partial<UserDto>) {
+    const user = await this.usersRepository.findOne(id);
+    if (user) {
+      return await this.usersRepository.update(id, userDto);
+    }
+    throw new NotFoundException();
   }
 
   async remove(id: number) {
