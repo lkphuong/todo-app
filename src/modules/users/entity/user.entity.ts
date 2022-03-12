@@ -16,6 +16,9 @@ export class UserEntity {
   @Column({ default: 0 })
   role: number;
 
+  @Column({ default: null })
+  refreshToken?: string;
+
   @OneToMany(() => ToDoEntity, (todo) => todo.user)
   todos: ToDoEntity[];
 }

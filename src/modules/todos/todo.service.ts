@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ToDoEntity } from './entity/todo.entity';
@@ -6,12 +6,15 @@ import { ToDoDto } from './dto/todo.dto';
 import { getConnection } from 'typeorm';
 import { convertJsonToExcel } from '../../common/utils/convertJsonToExcel';
 import { readFileExcel } from '../../common/utils/readFileExcel';
+import { REQUEST } from '@nestjs/core';
 
 @Injectable()
 export class ToDoService {
   constructor(
     @InjectRepository(ToDoEntity)
     private todoRepository: Repository<ToDoEntity>,
+    @Inject(REQUEST)
+    private request: any,
   ) {}
   findAll(): Promise<ToDoEntity[]> {
     return this.todoRepository.find({ relations: ['user'] });
@@ -22,9 +25,9 @@ export class ToDoService {
   }
 
   async create(todo: ToDoDto) {
-    const newTodo = this.todoRepository.create(todo);
-    await this.todoRepository.save(todo);
-    return newTodo;
+    // const newTodo = this.todoRepository.create(todo);
+    // await this.todoRepository.save(todo);
+    return await this.todoRepository.save(todo);
   }
 
   async remove(id: number): Promise<void> {
@@ -53,6 +56,6 @@ export class ToDoService {
       .into('to_do_entity')
       .values(data)
       .execute();
-    return data;
+    //return data;
   }
 }

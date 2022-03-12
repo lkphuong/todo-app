@@ -7,6 +7,8 @@ import { IndexModule } from './modules/index.module';
 import { AuthModule } from './common/auth/auth.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
+import { APP_GUARD } from '@nestjs/core';
+import { JwtAuthGuard } from './common/auth/jwt-auth.guard';
 @Module({
   imports: [
     TypeOrmModule.forRoot(config),
@@ -17,6 +19,12 @@ import { join } from 'path';
     IndexModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    // {
+    //   provide: APP_GUARD,
+    //   useClass: JwtAuthGuard,
+    // },
+  ],
 })
 export class AppModule {}

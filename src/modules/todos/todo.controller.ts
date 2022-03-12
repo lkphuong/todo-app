@@ -11,7 +11,7 @@ import {
   Response,
   StreamableFile,
 } from '@nestjs/common';
-import { createReadStream, unlink } from 'fs';
+import { createReadStream } from 'fs';
 import { join } from 'path';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { storage } from 'src/common/utils/storage';
@@ -64,8 +64,8 @@ export class ToDoController {
   @UseInterceptors(FileInterceptor('file', storage))
   async importExcel(@UploadedFile() file: Express.Multer.File) {
     //return await this.todoService.importExcel();
-    console.log(file);
-    console.log(file.path);
+    // console.log(file);
+    // console.log(file.path);
     return await this.todoService.importExcel(file.path);
   }
 

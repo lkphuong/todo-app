@@ -18,7 +18,7 @@ import { JwtAuthGuard } from 'src/common/auth/jwt-auth.guard';
 export class UserController {
   constructor(private userService: UserService) {}
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
+  // @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(ROLE.Admin)
   @Get()
   async getAll() {
