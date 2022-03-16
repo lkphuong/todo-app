@@ -4,6 +4,14 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script type="text/javascript">
+    const eventSource = new EventSource('/see');
+    eventSource.onmessage = ({ data }) => {
+      const message = document.createElement('li');
+      message.innerText = 'New message: ' + data;
+      document.body.appendChild(message);
+    }
+  </script>
 </head>
 
 <body>

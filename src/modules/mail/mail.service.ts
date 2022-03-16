@@ -13,8 +13,8 @@ export class MailService {
       },
     });
     const mailOptions = {
-      from: process.env.EMAIL,
-      to: 'kphuonght22@gmail.com',
+      from: '',
+      to: '',
       subject: 'Hello ✔',
       text: 'Hello world?',
     };

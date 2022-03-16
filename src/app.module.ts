@@ -39,10 +39,10 @@ import { JwtAuthGuard } from './common/auth/jwt-auth.guard';
   providers: [
     AppService,
     EventsGateway,
-    {
-      provide: APP_GUARD,
-      useClass: JwtAuthGuard,
-    },
+    // {
+    //   provide: APP_GUARD,
+    //   useClass: JwtAuthGuard,
+    // },
     {
       provide: APP_INTERCEPTOR,
       useClass: CacheInterceptor,
