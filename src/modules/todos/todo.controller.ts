@@ -13,6 +13,7 @@ import {
   Inject,
   ForbiddenException,
   NotFoundException,
+  CacheInterceptor,
 } from '@nestjs/common';
 import { createReadStream } from 'fs';
 import { join } from 'path';
@@ -33,6 +34,7 @@ export class ToDoController {
   @Get()
   async getAll() {
     const user = await this.request.user;
+    console.log(user);
     if (user.role == 1) {
       return await this.todoService.findAll();
     }
@@ -88,6 +90,7 @@ export class ToDoController {
     // console.log(file);
     // console.log(file.path);
     const user = await this.request.user;
+    console.log(user);
     if (user.role === 1) {
       return await this.todoService.importExcel(file.path);
     }

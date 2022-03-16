@@ -1,5 +1,7 @@
 import {
   All,
+  Body,
+  CacheInterceptor,
   Controller,
   Get,
   Header,
@@ -17,10 +19,15 @@ import { LocalAuthGuard } from './common/auth/local-auth.guard';
 import { Public } from './common/auth/setMetadata';
 import { replaceBearer } from './common/utils/replaceBearer';
 import { storage } from './common/utils/storage';
+import { AppService } from './app.service';
 
 @Controller()
+@UseInterceptors(CacheInterceptor)
 export class AppController {
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private appService: AppService,
+  ) {}
 
   @UseGuards(JwtAuthGuard)
   @Post('refreshToken')
@@ -44,5 +51,11 @@ export class AppController {
   uploadFile(@UploadedFile() file: Express.Multer.File) {
     console.log(file);
     return file;
+  }
+
+  @Get('/cache')
+  async addToCache() {
+    console.log('cache');
+    return [{ id: 1, name: 'Nest' }];
   }
 }

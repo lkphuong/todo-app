@@ -66,6 +66,7 @@ export class ToDoService {
 
   async importExcel(pathFile: string) {
     const data = readFileExcel(pathFile);
+    console.log(data);
     await getConnection()
       .createQueryBuilder()
       .insert()

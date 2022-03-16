@@ -19,6 +19,8 @@ import { RolesGuard } from 'src/common/guards/roles.guard';
 import { ROLE } from 'src/common/enum/role.enum';
 import { JwtAuthGuard } from 'src/common/auth/jwt-auth.guard';
 import { REQUEST } from '@nestjs/core';
+import { Public } from '../../common/auth/setMetadata';
+
 @Controller('user')
 export class UserController {
   constructor(
@@ -28,12 +30,16 @@ export class UserController {
   ) {}
 
   // @UseGuards(JwtAuthGuard, RolesGuard)
+  @Public()
   @Roles(ROLE.Admin)
   @Get()
   async getAll() {
-    //console.log(await this.request.user);
-    const user = await this.userService.findAll();
-    return user;
+    // console.log(await this.request.user);
+    const user = await this.request.user;
+    if (user.role == 1) {
+      return await this.userService.findAll();
+    }
+    throw new ForbiddenException();
   }
 
   // @Get(':id')
