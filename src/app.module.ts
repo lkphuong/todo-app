@@ -7,7 +7,7 @@ import { IndexModule } from './modules/index.module';
 import { AuthModule } from './common/auth/auth.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
-import { EventsGateway } from './chat.gateway';
+import { EventsGateway } from './events.gateway';
 import { CacheModule } from '@nestjs/common';
 import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { ScheduleModule } from '@nestjs/schedule';
@@ -19,7 +19,7 @@ import { JwtAuthGuard } from './common/auth/jwt-auth.guard';
     TypeOrmModule.forRoot(config),
     ScheduleModule.forRoot(),
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', 'public/images'),
+      rootPath: join(__dirname, '..', 'public/images/index.html'),
     }),
     CacheModule.register({
       ttl: 5, // seconds
@@ -38,11 +38,11 @@ import { JwtAuthGuard } from './common/auth/jwt-auth.guard';
   controllers: [AppController],
   providers: [
     AppService,
-    EventsGateway,
-    {
-      provide: APP_GUARD,
-      useClass: JwtAuthGuard,
-    },
+    // EventsGateway,
+    // {
+    //   provide: APP_GUARD,
+    //   useClass: JwtAuthGuard,
+    // },
     {
       provide: APP_INTERCEPTOR,
       useClass: CacheInterceptor,
