@@ -5,6 +5,6 @@ import { SchedulingModule } from './scheduling/scheduling.module';
 import { MailModule } from './mail/mail.module';
 
 @Module({
-  imports: [UserModule, TodoModule, SchedulingModule],
+  imports: [UserModule, TodoModule, SchedulingModule, MailModule],
 })
 export class IndexModule {}

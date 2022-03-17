@@ -4,14 +4,6 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <script type="text/javascript">
-    const eventSource = new EventSource('/see');
-    eventSource.onmessage = ({ data }) => {
-      const message = document.createElement('li');
-      message.innerText = 'New message: ' + data;
-      document.body.appendChild(message);
-    }
-  </script>
 </head>
 
 <body>
@@ -23,7 +15,7 @@
     <input id="message" type="text" />
     <button onclick="handleSubmitNewMessage()">Submit</button>
   </div>
-
+  
   <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
   <script src="./chat-socket.js"></script>
 </body>
